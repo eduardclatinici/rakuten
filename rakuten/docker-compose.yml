@@ -1,0 +1,49 @@
+version: '3.7'
+volumes:
+  pg-data:
+services:
+  pg:
+    image: postgres:11.5-alpine
+    container_name: postgres
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: always
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_DB: cep
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+  campaign:
+    build:
+      context: ./cep-campaign
+      dockerfile: ./Dockerfile
+    environment:
+      DB_CONNECTION: "pg:5432"
+    links:
+      - pg
+  points:
+    build:
+      context: ./cep-points
+      dockerfile: ./Dockerfile
+    environment:
+      DB_CONNECTION: "pg:5432"
+      CAMPAIGN_API_ADDRESS: "http://campaign:8080/campaign"
+    links:
+      - pg
+      - campaign
+  nginx:
+    image: nginx:1.15-alpine
+    container_name: proxy
+    restart: always
+    ports:
+      - "8080:80"
+      - "443:443"
+    volumes:
+      - ./config/nginx:/etc/nginx
+    depends_on:
+      - campaign
+      - points
+    links:
+      - campaign
+      - points
