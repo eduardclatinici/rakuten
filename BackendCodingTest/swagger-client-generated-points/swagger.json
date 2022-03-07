@@ -1,0 +1,315 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "Points test API for candidates evaluation",
+    "version" : "1.0.0",
+    "title" : "Test points API",
+    "contact" : {
+      "email" : "candidate@email-provider.com"
+    },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host" : "virtserver.swaggerhub.com",
+  "basePath" : "/rakuten.de/test-points/1.0.0",
+  "tags" : [ {
+    "name" : "Management",
+    "description" : "Secured Admin-only calls"
+  }, {
+    "name" : "Points",
+    "description" : "Operations available to handle points"
+  } ],
+  "schemes" : [ "https" ],
+  "paths" : {
+    "/health" : {
+      "get" : {
+        "tags" : [ "Management" ],
+        "summary" : "Retrieves the application Health status",
+        "operationId" : "getAppHealth",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Application Health status",
+            "schema" : {
+              "$ref" : "#/definitions/Health"
+            }
+          }
+        }
+      }
+    },
+    "/pointstransaction/{id}" : {
+      "get" : {
+        "tags" : [ "Points" ],
+        "summary" : "get a points transaction by id",
+        "description" : "By passing in the reference id, you can get the points transaction\n",
+        "operationId" : "getPointsTransactionById",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "pass the points transaction id",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Transaction returned OK",
+            "schema" : {
+              "$ref" : "#/definitions/PointsTransaction"
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Points" ],
+        "summary" : "updates a PointsTransaction",
+        "description" : "Updates an existing PointsTransaction",
+        "operationId" : "updatePointsTransaction",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "PointsTransaction id",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "PointsTransaction",
+          "description" : "PointsTransaction to update",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/PointsTransaction"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "PointsTransaction updated"
+          },
+          "400" : {
+            "description" : "invalid input, object invalid"
+          },
+          "404" : {
+            "description" : "PointsTransaction not found"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Points" ],
+        "summary" : "delete a points transaction by id",
+        "description" : "By passing in the reference id, you can delete the points transaction. The points calculated to the order are subtracted from the Customer's Points Balance\n",
+        "operationId" : "deletePointsTransactionById",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "pass the points transaction id",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Transaction deleted"
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          }
+        }
+      }
+    },
+    "/pointstransaction/" : {
+      "post" : {
+        "tags" : [ "Points" ],
+        "summary" : "adds a PointsTransaction",
+        "description" : "Adds a PointsTransaction to the system, calculates and adds the related points the Customer's Points Balance",
+        "operationId" : "addPointsTransaction",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "PointsTransaction",
+          "description" : "PointsTransaction to add",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/PointsTransaction"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "PointsTransaction created"
+          },
+          "400" : {
+            "description" : "invalid input, object invalid"
+          },
+          "409" : {
+            "description" : "PointsTransaction already exists"
+          }
+        }
+      }
+    },
+    "/pointstransaction/order/{orderid}" : {
+      "delete" : {
+        "tags" : [ "Points" ],
+        "summary" : "delete a points transaction by order id",
+        "description" : "By passing in the reference order id, you can delete the points transaction. The points calculated to the order are subtracted from the Customer's Points Balance\n",
+        "operationId" : "deletePointsTransactionByOrderId",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "orderid",
+          "in" : "path",
+          "description" : "pass the points transaction order id",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Transaction deleted"
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          },
+          "404" : {
+            "description" : "Transaction not found"
+          }
+        }
+      }
+    },
+    "/pointsbalance/customer/{customeremail}" : {
+      "get" : {
+        "tags" : [ "Points" ],
+        "summary" : "get a points balance by customer e-mail",
+        "description" : "By passing in the reference e-mail, you can get the points balance from the Customer\n",
+        "operationId" : "getPointsBalanceByCustomerEmail",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "customeremail",
+          "in" : "path",
+          "description" : "pass the customer e-mail",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Balance returned OK",
+            "schema" : {
+              "$ref" : "#/definitions/PointsBalance"
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "PointsTransaction" : {
+      "type" : "object",
+      "required" : [ "id", "order" ],
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        },
+        "order" : {
+          "$ref" : "#/definitions/Order"
+        }
+      }
+    },
+    "Order" : {
+      "type" : "object",
+      "required" : [ "createdAt", "customerEmail", "id", "items" ],
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        },
+        "customerEmail" : {
+          "type" : "string",
+          "example" : "customer@gmail.com"
+        },
+        "createdAt" : {
+          "type" : "string",
+          "format" : "date"
+        },
+        "items" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/OrderItem"
+          }
+        }
+      }
+    },
+    "OrderItem" : {
+      "required" : [ "id", "product", "quantity" ],
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        },
+        "product" : {
+          "$ref" : "#/definitions/Product"
+        },
+        "quantity" : {
+          "type" : "integer"
+        }
+      }
+    },
+    "Product" : {
+      "required" : [ "id", "name", "price" ],
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        },
+        "name" : {
+          "type" : "string",
+          "example" : "IPhone 8S"
+        },
+        "price" : {
+          "type" : "number",
+          "example" : 299.5
+        }
+      }
+    },
+    "PointsBalance" : {
+      "type" : "object",
+      "required" : [ "customerEmail", "id", "points" ],
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        },
+        "customerEmail" : {
+          "type" : "string",
+          "example" : "customer@gmail.com"
+        },
+        "points" : {
+          "type" : "integer"
+        }
+      }
+    },
+    "Health" : {
+      "type" : "object",
+      "required" : [ "status" ],
+      "properties" : {
+        "status" : {
+          "type" : "string",
+          "example" : "UP"
+        }
+      },
+      "description" : "Application Health status for Health check"
+    }
+  }
+}

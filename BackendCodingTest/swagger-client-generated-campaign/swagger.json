@@ -1,0 +1,261 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "This is a Campaign API for Candidates' Assignment Test",
+    "version" : "1.0.0",
+    "title" : "Test Campaign API",
+    "contact" : {
+      "email" : "candidate@email-provider.com"
+    },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host" : "virtserver.swaggerhub.com",
+  "basePath" : "/rakuten.de/test-campaign/1.0.0",
+  "tags" : [ {
+    "name" : "Management",
+    "description" : "Secured Admin-only calls"
+  }, {
+    "name" : "Campaign",
+    "description" : "Operations available to regular developers"
+  } ],
+  "schemes" : [ "https" ],
+  "paths" : {
+    "/health" : {
+      "get" : {
+        "tags" : [ "Management" ],
+        "summary" : "Retrieves the application Health status",
+        "operationId" : "getAppHealth",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Application Health status",
+            "schema" : {
+              "$ref" : "#/definitions/Health"
+            }
+          }
+        }
+      }
+    },
+    "/campaign/active/{date}" : {
+      "get" : {
+        "tags" : [ "Campaign" ],
+        "summary" : "get active campaigns at a date",
+        "description" : "By passing in the reference date, you can get the active campaigns\n",
+        "operationId" : "getActiveCampaigns",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "date",
+          "in" : "path",
+          "description" : "pass a required date string for looking up active campaigns in range. Date example - 2019-09-20",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Campaigns matching criteria",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Campaign"
+              }
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          }
+        }
+      }
+    },
+    "/campaign/" : {
+      "post" : {
+        "tags" : [ "Campaign" ],
+        "summary" : "adds a Campaign",
+        "description" : "Adds a Campaign to the system",
+        "operationId" : "addCampaign",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "Campaign",
+          "description" : "Campaign to add",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Campaign"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Campaign created"
+          },
+          "400" : {
+            "description" : "invalid input, object invalid"
+          },
+          "409" : {
+            "description" : "Campaign already exists"
+          }
+        }
+      }
+    },
+    "/campaign/{id}" : {
+      "get" : {
+        "tags" : [ "Campaign" ],
+        "summary" : "get campaign by id",
+        "description" : "By passing in the reference id, you can get the campaign\n",
+        "operationId" : "getCampaignById",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "pass an id for looking up an specific campaign",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Campaign matching the id",
+            "schema" : {
+              "$ref" : "#/definitions/Campaign"
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          },
+          "404" : {
+            "description" : "not found"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Campaign" ],
+        "summary" : "updates a Campaign",
+        "description" : "Updates an existing Campaign",
+        "operationId" : "updateCampaign",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Campaign id",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "Campaign",
+          "description" : "Campaign to update",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Campaign"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Campaign updated"
+          },
+          "400" : {
+            "description" : "invalid input, object invalid"
+          },
+          "404" : {
+            "description" : "Campaign not found"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Campaign" ],
+        "summary" : "deletes a Campaign",
+        "description" : "Deletes an existing Campaign",
+        "operationId" : "deleteCampaign",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Campaign id",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Campaign deleted"
+          },
+          "400" : {
+            "description" : "invalid input, object invalid"
+          },
+          "404" : {
+            "description" : "Campaign not found"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "Campaign" : {
+      "type" : "object",
+      "required" : [ "endDate", "id", "name", "points", "products", "startDate" ],
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        },
+        "name" : {
+          "type" : "string",
+          "example" : "Cellphone special offers"
+        },
+        "startDate" : {
+          "type" : "string",
+          "format" : "date",
+          "example" : "2019-09-26T00:00:00.000Z"
+        },
+        "endDate" : {
+          "type" : "string",
+          "format" : "date",
+          "example" : "2019-09-29T00:00:00.000Z"
+        },
+        "points" : {
+          "type" : "integer",
+          "example" : 10
+        },
+        "products" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Product"
+          }
+        }
+      }
+    },
+    "Product" : {
+      "required" : [ "id", "name", "price" ],
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        },
+        "name" : {
+          "type" : "string",
+          "example" : "IPhone 8S"
+        },
+        "price" : {
+          "type" : "number",
+          "example" : 299.5
+        }
+      }
+    },
+    "Health" : {
+      "type" : "object",
+      "required" : [ "status" ],
+      "properties" : {
+        "status" : {
+          "type" : "string",
+          "example" : "UP"
+        }
+      },
+      "description" : "Applicaiton Health status for Health check"
+    }
+  }
+}
