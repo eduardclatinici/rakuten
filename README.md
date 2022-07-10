@@ -1,4 +1,4 @@
-This is a homework I received for an interview.
+Interview
 
 cep-campaign: source code for cep-campaign jar
 
